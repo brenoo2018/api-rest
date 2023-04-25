@@ -4,13 +4,13 @@ import { z } from 'zod';
 import { knex } from '../database';
 
 export async function transactionsRoutes(app: FastifyInstance) {
-  app.get('/', async (req, res) => {
+  app.get('/', async () => {
     const transactions = await knex('transactions').select('*');
 
     return { transactions };
   });
 
-  app.get('/:id', async (req, res) => {
+  app.get('/:id', async (req) => {
     const getTransactionParamsSchema = z.object({
       id: z.string().uuid(),
     });
@@ -20,6 +20,14 @@ export async function transactionsRoutes(app: FastifyInstance) {
     const transaction = await knex('transactions').where('id', id).first();
 
     return { transaction };
+  });
+
+  app.get('/summary', async (req, res) => {
+    const summary = await knex('transactions')
+      .sum('amount', { as: 'amount' })
+      .first();
+
+    return { summary };
   });
 
   app.post('/', async (req, res) => {
