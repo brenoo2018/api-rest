@@ -6,6 +6,10 @@ const app = fastify();
 
 app.register(cookie);
 
+// app.addHook('preHandler', async (req, res) => {
+
+// })
+
 app.register(transactionsRoutes, { prefix: 'transactions' });
 
 app.listen({ port: 3333 }).then(() => {
