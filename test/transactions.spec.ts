@@ -1,5 +1,14 @@
-import { expect, it, beforeAll, afterAll, describe } from 'vitest';
+import {
+  expect,
+  it,
+  beforeAll,
+  afterAll,
+  describe,
+  beforeEach,
+  afterEach,
+} from 'vitest';
 import request from 'supertest';
+import { execSync } from 'node:child_process';
 
 import { app } from '../src/app';
 
@@ -10,6 +19,11 @@ describe('transactions routes', () => {
 
   afterAll(async () => {
     await app.close();
+  });
+
+  beforeEach(() => {
+    execSync('npm run knex migrate:rollback --all');
+    execSync('npm run knex migrate:latest');
   });
 
   it('shloud be able to create a new transaction', async () => {
